@@ -1,0 +1,653 @@
+1
+Select model ,  speed, hd from pc
+Where price < 500
+
+2
+select distinct Maker from Product 
+where type='Printer'
+
+3
+select model, ram, screen from laptop 
+where price > 1000
+
+4
+select * from printer 
+where color = 'y'
+
+5
+Select model, speed, hd from pc
+where (cd = '12x' or cd = '24x') and price < 600
+
+6
+select distinct product.maker, Laptop.speed from Laptop 
+inner join product on Product.model = Laptop.model   
+where hd >= 10
+
+7
+select distinct product.model, laptop.price from product
+inner join laptop on laptop.model = product.model  
+where product.maker = 'B' 
+union
+select distinct product.model, pc.price from product
+inner join pc on pc.model = product.model  
+where product.maker = 'B' 
+union
+select distinct product.model, printer.price from product
+inner join printer on printer.model = product.model  
+where product.maker = 'B'
+
+8
+select maker from product
+where type = 'PC'
+except 
+select maker from product
+where type = 'Laptop'
+
+9
+select distinct maker
+from pc
+inner join product on pc.model = product.model
+where speed >= 450
+
+10
+select model, price from printer
+where price = (select max(price) from printer)
+
+11
+select avg(speed) from pc
+
+12
+select avg(speed) from laptop
+where price > 1000
+
+13
+select avg(speed) from pc
+inner join product on pc.model= product.model
+where maker = 'A'
+
+14
+select classes.class, name, country from ships
+inner join classes on classes.class = ships.class
+where numguns >= 10
+
+15
+select hd from pc
+group by hd having count(model) >= 2
+
+
+16
+select distinct b.model as model, a.model as model, A.speed, A.ram from PC as A, PC as B
+where A.speed = B.speed and A.ram = B.ram and A.model < B.model
+
+17
+select distinct type, laptop.model, speed from laptop
+inner join product on laptop.model= product.model
+where speed < (select min(speed) from pc)
+
+18
+select distinct maker, price from printer
+inner join product on printer.model = product.model
+where price = (select min(price) from printer where color = 'y') and color = 'y'
+
+19
+select maker, avg(screen) as Ascreen from laptop
+inner join product on product.model = laptop.model
+group by maker
+
+20
+select maker, count(model) as number from product
+where type = 'pc'
+group by maker
+having count(model) >= 3
+
+21
+select maker, max(price) as Maximum from pc
+inner join product on pc.model = product.model
+group by maker
+
+22
+select speed, avg(price) as Avg from pc
+where speed > 600
+group by speed
+
+23
+select distinct maker from pc
+inner join product on pc.model = product.model
+where pc.speed >= 750 and maker in (select  maker from laptop
+inner join product on laptop.model = product.model
+where laptop.speed >= 750)
+
+
+24
+select model from (select model, price from PC
+union
+select model, price from Printer
+union 
+select model, price from Laptop) as t
+where price = (select max(price) from (select price from PC
+union
+select price from Printer
+union
+select price from Laptop) as tt)
+
+25
+select distinct maker from Product
+where model in (select model from PC 
+where ram = (select min(ram) from PC) and speed = (select max(speed) from PC where ram = (select min(ram) from PC))) and maker in (select maker from Product where type = 'printer')
+
+26
+select  avg(price) as Avg from (select price from pc
+inner join product on product.model = pc.model
+where maker = 'A'
+union all
+select price from laptop inner join product on product.model = laptop.model
+where maker = 'A') t
+
+27
+select maker, avg(hd) from product
+inner join pc on product.model = pc.model
+where maker in (select maker from product
+where type = 'printer')
+group by maker
+
+28
+select count(*) from (select maker from product
+group by maker
+having count(model) = 1) as numb
+
+29
+select t.point, t.date, SUM(t.inc), sum(t.out) from(select point, date, inc, null as out from Income_o
+union
+select point, date, null as inc, Outcome_o.out from Outcome_o) as t
+group by t.point, t.date
+
+30
+select point, date, SUM(so), SUM(si) from (select point, date, SUM(inc) as si, null as so from Income 
+group by point, date  
+union 
+select point, date, null as sum_inc, SUM(out) as so from Outcome
+group by point, date) as t  
+group by point, date order by point
+
+31
+select class, country from classes
+where bore >= 16
+
+32
+select country, cast(avg((power(bore, 3)/2)) as numeric(6, 2)) as w from (select country, classes.class, bore, name from classes 
+join ships on classes.class = ships.class  
+union all 
+select distinct country, class, bore, ship from classes  
+join outcomes on classes.class = outcomes.ship  
+where ship = class and ship not in (select name from ships)) a 
+where name != 'null' group by country
+
+33
+select distinct ship from outcomes, battles
+where result = 'sunk' and battle = 'North Atlantic'
+
+34
+select name from classes, ships
+where launched >= 1922 and type='bb' and displacement > 35000 and ships.class = classes.class
+
+35
+select model, type from product 
+where model not like '%[^0-9]%' or model not like '%[^a-z]%'
+
+36
+select name from ships
+where class = name   
+union  
+select ship from classes, outcomes
+where classes.class = outcomes.ship
+
+37
+select class from (select name, class from ships
+union
+select class, class from classes, outcomes
+where classes.class=outcomes.ship) x
+group by class having count(x.name) = 1
+
+38
+select distinct country from classes
+where type='bb'
+intersect
+select distinct country from classes
+where type='bc'
+
+39
+select distinct x.ship from(select * from outcomes
+join battles on battle = name
+where result = 'damaged') as x
+where exists (select ship from outcomes
+join battles on battle = name
+where ship = x.ship and x.date < date)
+
+40
+select maker, type from Product
+where maker in (select maker from (select maker, type from Product
+group by maker, type) x
+group by maker having count(*) = 1)
+group by maker, type having count(*) > 1
+
+42
+select ship, battle from outcomes
+where result = 'sunk'
+
+43
+select name from battles
+where datepart(yy, date) not in (select DATEPART(yy, date) from battles join ships on datepart(yy, date) = launched)
+
+44
+select name from ships where name like 'R%'
+union
+select name from battles where name like 'R%'
+union
+select ship from outcomes where ship like 'R%'
+
+45
+select name from ships where name like '% % %'  
+union   
+select ship from outcomes where ship like '% % %'
+
+46
+select distinct ship, displacement, numguns from Classes 
+inner join Ships on Ships.class = Classes.class
+right join Outcomes on Outcomes.ship = Ships.name or Outcomes.ship = Classes.class
+where Outcomes.battle = 'Guadalcanal'
+
+48
+select distinct classes.class from outcomes
+left join ships on outcomes.ship = ships.name
+join classes on (outcomes.ship = classes.class or ships.class = classes.class)
+where result = 'sunk'
+
+49
+select name from ships
+join classes on ships.class = classes.class
+where bore = 16
+union
+select ship from outcomes 
+join classes on outcomes.ship = classes.class
+where bore = 16
+
+
+50
+select distinct battle from outcomes
+join ships on outcomes.ship=ships.name
+join classes on classes.class=ships.class
+where classes.class='Kongo'
+
+
+51
+select xxx from (select name as xxx, displacement, numguns from ships
+inner join classes on ships.class = classes.class 
+union 
+select ship as xxx, displacement, numguns from outcomes
+inner join classes on outcomes.ship = classes.class) as x
+inner join (select displacement, max(numGuns) as numguns from (select displacement, numguns from ships
+inner join classes on ships.class = classes.class  
+union 
+select displacement, numguns from outcomes 
+inner join classes on outcomes.ship = classes.class) as y 
+group by displacement) as z on x.displacement = z.displacement and x.numguns = z.numguns
+
+52
+select ships.name from ships
+join classes on classes.class = ships.class
+where country = 'Japan'
+and type = 'bb' and (numguns >= 9 or numguns is null)
+and (bore < 19 or bore is null)
+and (displacement <= 65000 or displacement is null)
+
+53
+select cast(avg(numguns*1.0) as numeric(6,2)) as "xxx" from classes
+where type = 'bb'
+
+
+54
+select cast(avg(numguns * 1.0) as numeric(6, 2)) as "xxx" from (select name, class from ships
+union
+select ship, ship from outcomes) x
+join classes on x.class = classes.class
+where type = 'bb'
+
+55
+select classes.class, min(launched) "xxx" from classes
+full join ships on classes.class = ships.class
+group by classes.class
+
+56
+select class, sum(case when result = 'sunk' then 1 else 0 end) as x from (
+select classes.class, name from classes
+left join ships on classes.class=ships.class
+union
+select class, ship from classes
+join outcomes on class = ship) as xx
+left join outcomes on xx.name = outcomes.ship
+group by class
+
+57
+select class, sum(case when result = 'sunk' then 1 else 0 end) as xxx from (
+select classes.class, name from classes
+join ships on classes.class = ships.class
+union
+select class, ship from classes 
+join outcomes on class = ship) as xx
+left join outcomes on xx.name = outcomes.ship
+group by class
+having sum(case when result = 'sunk' then 1 else 0 end) > 0 and 
+(select count(x.name) from (
+select ships.name, ships.class from ships
+union
+select outcomes.ship, outcomes.ship from outcomes) as x
+where x.class = xx.class
+group by x.class) >= 3
+
+59
+select x.point, case when yyy is null then xxx else xxx - yyy end remain from
+(select point, sum(inc) as xxx from Income_o
+group by point) as x
+left join (select point, sum(out) as yyy from Outcome_o
+group by point) as y on x.point = y.point
+
+60
+select coalesce(x.point, y.point) as point ,sum(coalesce(inc,0)) - sum(coalesce(out,0)) as remain from income_o x
+full join outcome_o y on x.date = y.date and x.point = y.point
+where coalesce(x.date,y.date) < '2001-04-15'
+group by coalesce(x.point,y.point)
+order by 1,2
+
+61
+select sum(coalesce(inc, 0)) - sum(coalesce(out, 0)) as xxx from income_o x
+full join outcome_o y on x.date = y.date and x.point = y.point
+
+62
+select sum(coalesce(inc, 0)) - sum(coalesce(out, 0)) as xxx from income_o x
+full join outcome_o y on x.date = y.date and x.point = y.point
+where coalesce(x.date, y.date) < '2001-04-15'
+
+63
+select name from passenger
+where id_psg in (select pass_in_trip.id_psg from pass_in_trip
+group by pass_in_trip.id_psg, pass_in_trip.place
+having count(*) > 1)
+
+64
+select coalesce(x.point, y.point) as point, coalesce(x.date, y.date) as date,
+case when sum(inc) is not null
+then 'inc' else 'out'
+end as operation,
+case when sum(inc) is not null
+then sum(inc)
+else sum(out) end as money from income x
+full join outcome y on x.date = y.date and x.point = y.point
+group by coalesce(x.point, y.point), coalesce(x.date, y.date)
+having sum(inc) is null or sum(out) is null
+order by 1,2
+
+65
+select row_number() over(order by maker) as xxx,
+case when x = 1 then maker
+else ''
+end as maker,
+type from
+(select row_number() over(partition by maker order by maker, ord) as x, maker, type from (select distinct maker, type,
+case when lower(type) = 'pc' then 1
+when lower(type) = 'laptop' then 2
+else 3
+end as ord
+from product) as z) as k
+
+66
+select date, max(num) from (
+select date, count(*) as num from Trip, 
+(select trip_no, date from Pass_in_trip where date <= '2003-04-07' and date >= '2003-04-01' group by date, trip_no)x
+where town_from = 'Rostov' and Trip.trip_no = x.trip_no
+group by date
+union all
+select '2003-04-01', 0
+union all
+select '2003-04-02', 0
+union all
+select '2003-04-03', 0
+union all
+select '2003-04-04', 0
+union all
+select '2003-04-05', 0
+union all
+select '2003-04-06', 0
+union all
+select '2003-04-07', 0)y
+group by date
+
+67
+with y as (select count(*) as x from trip
+group by town_from, town_to)
+select count(*) as route_count from y
+where x=(select max(x) from y)
+
+68
+with x as (select count(*) as route_trips from trip
+group by
+case when town_from > town_to
+then town_from else town_to
+end,
+case when town_from < town_to
+then town_from else town_to
+end)
+select count(*) as route_count from x
+where route_trips = (select max(route_trips) from x)
+
+69
+with b as (select isnull(x.point, y.point) point, isnull(x.date, y.date) date, coalesce(sum(x.inc), 0) - coalesce(sum(y.out), 0) balance from income x
+full join outcome y on x.point = y.point and x.date = y.date and x.code = y.code
+group by isnull(x.point, y.point), isnull(x.date, y.date))
+select point, convert(varchar, date, 103) day, sum(balance) over(partition by point order by date range unbounded preceding) as xxx
+from b
+order by point,date
+
+70
+select distinct outcomes.battle from outcomes
+left join ships on ships.name = outcomes.ship
+left join classes on outcomes.ship = classes.class or ships.class = classes.class
+where classes.country is not null
+group by classes.country, outcomes.battle
+having count(outcomes.ship) >= 3
+
+71
+select distinct maker from Product x
+where type='PC' and not exists
+(select model from Product y
+where x.maker = y.maker and y.type = 'PC' and not exists
+(select model from pc where y.model = pc.model))
+
+72
+with x as (select p.id_psg as id, count(p.date) as trip_num from pass_in_trip p join trip on p.trip_no = trip.trip_no
+group by p.id_psg
+having max(trip.id_comp) = min(trip.id_comp))
+select name, trip_num from x join Passenger ps on x.id=ps.id_psg
+where trip_num = (select max(trip_num) from x)
+
+73
+select country, name as battle from classes, battles
+except
+select country, battle from (select class, name as n from ships
+union
+select ship, ship from outcomes) as x
+join Classes on x.class = Classes.class
+join Outcomes on Outcomes.ship = x.n
+
+74
+select country, class from Classes
+where country = case when exists
+(select class from Classes where country = 'Russia') 
+then 'Russia'
+else country
+end
+
+76
+with xxx as (select row_number() over(partition by p.id_psg, place order by date) x, 
+case when time_out > time_in then (datediff(mi, time_out, dateadd(day, 1, time_in))) 
+else datediff(mi, time_out, time_in) end y, p.id_psg, ps.name
+from pass_in_trip p inner join trip on p.trip_no = trip.trip_no
+inner join passenger ps on p.id_psg = ps.id_psg)
+select max(name), sum(y) from xxx
+group by id_psg
+having max(x) = 1
+
+77
+with xxx as (select count(distinct trip.trip_no) as trip_count, p.date from trip, pass_in_trip p
+where trip.trip_no = p.trip_no and town_from = 'Rostov'
+group by date)
+select trip_count, date from xxx
+where trip_count = (select max(trip_count) from xxx)
+
+78
+select name, dateadd(day, 1, eomonth(dateadd(month, -1, date))) x1, eomonth(date) x2 from battles
+
+79
+with x as (select id_psg, sum(case when time_out >= time_in 
+then (datediff(mi, time_out, time_in) + 24*60)
+else (datediff(mi, time_out, time_in)) end) xxx from trip inner join pass_in_trip pit on trip.trip_no = pit.trip_no
+group by id_psg)
+select name, xxx
+from passenger p inner join x on x.id_psg = p.id_psg
+where xxx = (select max(xxx) from x)
+
+80
+select maker from product
+except
+select maker from product
+where type = 'pc' and model not in (select model from pc)
+
+81
+with x as (select *, sum(out) over(partition by year(date), month(date)) as xxx from Outcome)
+select code, point, date, out from x
+where xxx = (select max(xxx) from x)
+
+82
+with x as (select *, row_number() over(order by code) xxx from pc)
+select code, (select avg(price) from x 
+where xxx between y.xxx and y.xxx + 5) yyy from x y
+where xxx <= (select max(xxx) - 5 from x)
+
+83
+with x as (select name
+, case numGuns when 8 then 1 else 0 end as x1
+, case bore when 15 then 1 else 0 end as x2
+, case displacement when 32000 then 1 else 0 end as x3
+, case type when 'bb' then 1 else 0 end as x4
+, case launched when 1915 then 1 else 0 end as x5
+, case classes.class when 'Kongo' then 1 else 0 end as x6
+, case country when 'USA' then 1 else 0 end as x7
+from ships, classes where ships.class = classes.class)
+select name from x where (x1 + x2 + x3 + x4 + x5 + x6 + x7) >= 4
+
+84
+select company.name
+, SUM(iif(day(date) < 11, 1, 0)) as q1
+, SUM(iif(day(date) < 21 and day(date) > 10, 1, 0)) as q2
+, SUM(iif(day(date) > 20, 1, 0)) as q3
+from pass_in_trip p
+join trip on p.trip_no = trip.trip_no
+join company on company.id_comp = trip.id_comp
+where year(p.date) = 2003 and month(p.date) = 4
+group by name
+
+85
+select maker from product
+where type = 'printer'
+except
+select maker from product
+where type != 'printer'
+union
+(select maker from product
+where type = 'pc'
+group by maker
+having count(model) >= 3
+except
+select maker from product
+where type != 'pc')
+
+86
+select maker, case count(distinct type) 
+when 1 then max(type)
+when 2 then min(type) + '/' + max(type)
+else 'laptop/pc/printer'
+end
+from product
+group by maker
+
+88
+with xxx as (select pit.id_psg, count(pit.trip_no) as tc, max(trip.id_comp) as id_comp from pass_in_trip pit
+join trip on pit.trip_no = trip.trip_no
+group by pit.id_psg
+having count(distinct trip.id_comp) = 1)
+select p.name, x.tc, company.name from xxx x
+join company on x.id_comp = company.id_comp
+join passenger p on x.id_psg = p.id_psg
+where x.tc = (select max(tc) from xxx)
+
+
+89
+with x as (select maker, count(model) y from product
+group by maker)
+select maker, y from x
+where y = (select min(y) from x) or y = (select max(y) from x)
+
+90
+select xxx.maker, xxx.model, xxx.type from
+(select row_number() over (order by model) x, row_number() over (order by model desc) y, * from product) xxx
+where x > 3 and y > 3
+
+91
+select cast (sum(x) / count(x) as decimal(6, 2))
+from (select distinct q_name, sum(cast(isnull(b_vol, 0) as decimal(6, 2))) x
+from utq left join utb on utq.q_id = utb.b_q_id
+group by q_name) xxx
+
+92
+select distinct q_name from utq
+where q_id in (select distinct x.b_q_id
+from (select b_q_id
+from utb
+group by b_q_id having(sum(b_vol)) = 765)x
+where x.b_q_id not in (select b_q_id from utb
+where b_v_id in (select b_v_id from utb group by b_v_id having sum(b_vol) < 255)))
+
+95
+select Company.name, count(distinct convert(char(24), p.date) + convert(char(4), trip.trip_no)) fl, 
+count(distinct Trip.plane) pl,
+count(distinct p.ID_psg) df,
+count(p.ID_psg) tt
+from Company
+join Trip On Company.ID_comp = Trip.ID_comp
+join Pass_in_Trip p On p.trip_no = Trip.trip_no
+Group by Company.name
+
+96
+select distinct x.V_NAME from (
+select *, min(v_color) over(partition by b_q_id) as y, count(*) over(partition by b_v_id) as xxx
+from utb join utv on utV.V_ID = utB.B_V_ID ) x
+where y = 'B' and xxx > 1 and x.V_COLOR = 'R'
+
+98
+with xxx as (select 1 x, cast (0 as varchar(16)) bit_or, code, speed, ram from pc
+union all
+select x*2, cast (convert(bit,(speed|ram)&x) as varchar(1)) + cast(bit_or as varchar(15)), code, speed, ram from xxx where x < 65536)
+select code, speed, ram from xxx
+where x = 65536
+and charindex('1111', bit_or )> 0
+
+99
+with x as (select point, date, date nD from Income_o
+union all
+select point, date, nD + 1
+from x where nD in (select date from Outcome_o where point = x.point) or datepart(dw, nD) = 1), y as (select point, date, max(nD) mD from x group by point, date)
+select point, date, iif(date = mD, date, mD) d2 from y
+
+100
+with x as (select row_number() over(partition by date order by code) y, * from outcome),
+x1 as (select row_number() over(partition by date order by code) y, * from income)
+select coalesce(x1.date, x.date) o, coalesce(x1.y, x.y) oo, x1.point, inc, x.point, out from x1 full join x on x1.date = x.date and x1.y = x.y
