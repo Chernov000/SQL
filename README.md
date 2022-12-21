@@ -8,4 +8,5 @@
 
 Database.sql - структура базы данных           
 tableinfo.sql - данные для таблиц             
-todo.sql - Запросы
+todo.sql - Запросы              
+SQLex.txt - задачки
