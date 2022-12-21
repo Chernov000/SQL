@@ -6,6 +6,6 @@
 
 
 
-Database.sql - структура базы данных
-tableinfo.sql - данные для таблиц
+Database.sql - структура базы данных           
+tableinfo.sql - данные для таблиц             
 todo.sql - Запросы
