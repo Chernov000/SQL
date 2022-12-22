@@ -18,13 +18,6 @@ CREATE TABLE "status"(
 ALTER TABLE
     "status" ADD PRIMARY KEY("status_id");
 
-CREATE TABLE "lending_price"(
-    "id" INTEGER NOT NULL,
-    "price" INTEGER NOT NULL
-);
-ALTER TABLE
-    "lending_price" ADD PRIMARY KEY("id");
-
 CREATE TABLE "type"(
     "id" INTEGER NOT NULL,
     "type" VARCHAR(100) NOT NULL);
