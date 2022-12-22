@@ -1,38 +1,62 @@
-CREATE TABLE "authors"(
-    "id" INTEGER NOT NULL,
-    "full_name" VARCHAR(100) NOT NULL
-);
-ALTER TABLE
-    "authors" ADD PRIMARY KEY("id");
-CREATE TABLE "books"(
-    "id" INTEGER NOT NULL,
-    "name" VARCHAR(100) NOT NULL,
-    "id_author" INTEGER NOT NULL,
-    "year" INTEGER NOT NULL,
-    "quantity" INTEGER NOT NULL
-);
-ALTER TABLE
-    "books" ADD PRIMARY KEY("id");
-CREATE TABLE "readers"(
-    "id" INTEGER NOT NULL,
-    "full_name" VARCHAR(100) NOT NULL,
-    "address" VARCHAR(100) NOT NULL,
-    "telephone_num" VARCHAR(11) NOT NULL
-);
-ALTER TABLE
-    "readers" ADD PRIMARY KEY("id");
-CREATE TABLE "lending"(
-    "id" INTEGER NOT NULL,
-    "book_id" INTEGER NOT NULL,
-    "date_lending" DATE NOT NULL,
-    "date_take" DATE NOT NULL,
-    "reader_id" INTEGER NOT NULL
-);
-ALTER TABLE
-    "lending" ADD PRIMARY KEY("id");
-ALTER TABLE
-    "lending" ADD CONSTRAINT "lending_book_id_foreign" FOREIGN KEY("book_id") REFERENCES "books"("id");
-ALTER TABLE
-    "books" ADD CONSTRAINT "books_id_author_foreign" FOREIGN KEY("id_author") REFERENCES "authors"("id");
-ALTER TABLE
-    "lending" ADD CONSTRAINT "lending_reader_id_foreign" FOREIGN KEY("reader_id") REFERENCES "readers"("id");
+INSERT INTO authors(id,full_name) VALUES
+(1, 'Федор Михайлович Достоевский'),
+(2, 'Александр Сергеевич Пушкин'),
+(3, 'Александр Александрович Блок');
+
+INSERT INTO books(id,name,id_author,year) VALUES
+(1, 'Бесы',1,1872),
+(2, 'Идиот',1,1879),
+(3, 'Незнакомка',3,1907),
+(4, 'Сказка о золотой рыбке',2,1833),
+(5, 'Руслан и Людмила',2,1820);
+
+INSERT INTO readers(id,full_name,address,telephone_num) VALUES
+(1, 'Малинов Сергей Викторович','Московская область, город Павловский Посад, спуск Балканская, 30
+','89301221342'),
+(2,'Вишнев Виктор Сергеевич','Орловская область, город Талдом, пер. Ломоносова, 80'
+,'8900213454'),
+(3,'Яблошкин Федор Игнатьевич','Саратовская область, город Дорохово, пр. Домодедовская, 61
+','89123231231'),
+(4, 'Иванов Иван Сергеевич','Ростовская область, город Сергиев Посад, спуск Славы, 98
+','89999999999'),
+(5, 'Лобин Сергей Валентинович','Амурская область, город Шаховская, пер. Славы, 52
+','89111423212');
+
+INSERT INTO lending(id,book_id,date_lending,date_take,reader_id) VALUES
+(1, 5,'2022-12-12','2023-02-12',1),
+(2, 6,'2022-11-12','2023-01-12',2),
+(3, 7,'2022-10-12','2022-12-12',3),
+(4, 16,'2022-09-12','2022-11-12',4),
+(5, 18,'2022-10-11','2022-12-11',5);
+
+insert into status(status_id, status) VALUES
+(1, 'в библиотеке'),
+(2, 'списана'),
+(3, 'потеряна'),
+(4, 'у читателя');
+
+insert into type(id, type) VALUES
+(1, 'Платная'),
+(2, 'Бесплатная');
+
+INSERT INTO books_history(id, book_id, status, date_of_arrival, type) VALUES
+(1,1,1,'2022-09-01',1),
+(2,1,1,'2022-09-01',1),
+(3,1,1,'2022-09-01',1),
+(4,1,2,'2022-09-01',1),
+(5,1,4,'2022-09-01',1),
+(6,2,4,'2022-09-01',2),
+(7,2,4,'2022-09-01',2),
+(8,3,1,'2022-09-01',1),
+(9,3,1,'2022-09-01',1),
+(10,3,3,'2022-09-01',1),
+(11,4,1,'2022-09-01',1),
+(12,4,1,'2022-09-01',1),
+(13,4,1,'2022-09-01',1),
+(14,4,2,'2022-09-01',1),
+(15,4,3,'2022-09-01',1),
+(16,4,4,'2022-09-01',1),
+(17,4,1,'2022-09-01',1),
+(18,5,4,'2022-09-13',2),
+(19,5,1,'2022-09-13',2),
+(20,5,1,'2022-09-13',2);
