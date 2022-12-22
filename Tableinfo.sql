@@ -1,30 +1,79 @@
-INSERT INTO authors(id,full_name) VALUES
-(1, 'Федор Михайлович Достоевский'),
-(2, 'Александр Сергеевич Пушкин'),
-(3, 'Александр Александрович Блок');
+CREATE table "books_history"
+(
+    "id"              INTEGER      NOT NULL,
+    "book_id"              INTEGER      NOT NULL,
 
-INSERT INTO books(id,name,id_author,year,quantity) VALUES
-(1, 'Бесы',1,1872,10),
-(2, 'Идиот',1,1879,2),
-(3, 'Незнакомка',3,1907,5),
-(4, 'Сказка о золотой рыбке',2,1833,25),
-(5, 'Руслан и Людмила',2,1820,9);
+    "status"          smallint     not null,
+    "date_of_arrival" DATE         NOT NULL,
+    "type" integer not null
+);
+ALTER TABLE
+    "books_history" ADD PRIMARY KEY("id");
 
-INSERT INTO readers(id,full_name,address,telephone_num) VALUES
-(1, 'Малинов Сергей Викторович','Московская область, город Павловский Посад, спуск Балканская, 30
-','89301221342'),
-(2,'Вишнев Виктор Сергеевич','Орловская область, город Талдом, пер. Ломоносова, 80'
-,'8900213454'),
-(3,'Яблошкин Федор Игнатьевич','Саратовская область, город Дорохово, пр. Домодедовская, 61
-','89123231231'),
-(4, 'Иванов Иван Сергеевич','Ростовская область, город Сергиев Посад, спуск Славы, 98
-','89999999999'),
-(5, 'Лобин Сергей Валентинович','Амурская область, город Шаховская, пер. Славы, 52
-','89111423212');
 
-INSERT INTO lending(id,book_id,date_lending,date_take,reader_id) VALUES
-(1, 1,'2022-12-12','2023-02-12',1),
-(2, 2,'2022-11-12','2023-01-12',2),
-(3, 2,'2022-10-12','2022-12-12',3),
-(4, 4,'2022-09-12','2022-11-12',4),
-(5, 5,'2022-10-11','2022-12-11',5);
+CREATE TABLE "status"(
+    "status_id" INTEGER NOT NULL,
+    "status" VARCHAR(100) NOT NULL
+);
+ALTER TABLE
+    "status" ADD PRIMARY KEY("status_id");
+
+CREATE TABLE "lending_price"(
+    "id" INTEGER NOT NULL,
+    "price" INTEGER NOT NULL
+);
+ALTER TABLE
+    "lending_price" ADD PRIMARY KEY("id");
+
+CREATE TABLE "type"(
+    "id" INTEGER NOT NULL,
+    "type" VARCHAR(100) NOT NULL);
+ALTER TABLE
+    "type" ADD PRIMARY KEY("id");
+
+
+ALTER TABLE
+    "books_history" ADD CONSTRAINT "books_history_status_foreign" FOREIGN KEY("status") REFERENCES "status"("status_id");
+
+ALTER TABLE
+    "books_history" ADD CONSTRAINT "books_history_type_foreign" FOREIGN KEY("type") REFERENCES "type"("id");
+ALTER TABLE
+    "books_history" ADD CONSTRAINT "books_history_book_id_foreign" FOREIGN KEY("book_id") REFERENCES "books"("id");
+
+CREATE TABLE "authors"(
+    "id" INTEGER NOT NULL,
+    "full_name" VARCHAR(100) NOT NULL
+);
+ALTER TABLE
+    "authors" ADD PRIMARY KEY("id");
+CREATE TABLE "books"(
+    "id" INTEGER NOT NULL,
+    "name" VARCHAR(100) NOT NULL,
+    "id_author" INTEGER NOT NULL,
+    "year" INTEGER NOT NULL
+);
+ALTER TABLE
+    "books" ADD PRIMARY KEY("id");
+CREATE TABLE "readers"(
+    "id" INTEGER NOT NULL,
+    "full_name" VARCHAR(100) NOT NULL,
+    "address" VARCHAR(100) NOT NULL,
+    "telephone_num" VARCHAR(11) NOT NULL
+);
+ALTER TABLE
+    "readers" ADD PRIMARY KEY("id");
+CREATE TABLE "lending"(
+    "id" INTEGER NOT NULL,
+    "book_id" INTEGER NOT NULL,
+    "date_lending" DATE NOT NULL,
+    "date_take" DATE NOT NULL,
+    "reader_id" INTEGER NOT NULL
+);
+ALTER TABLE
+    "lending" ADD PRIMARY KEY("id");
+ALTER TABLE
+    "lending" ADD CONSTRAINT "lending_book_id_foreign" FOREIGN KEY("book_id") REFERENCES "books_history"("id");
+ALTER TABLE
+    "books" ADD CONSTRAINT "books_id_author_foreign" FOREIGN KEY("id_author") REFERENCES "authors"("id");
+ALTER TABLE
+    "lending" ADD CONSTRAINT "lending_reader_id_foreign" FOREIGN KEY("reader_id") REFERENCES "readers"("id");
